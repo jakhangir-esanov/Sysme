@@ -29,6 +29,14 @@ public class DoctorsController : Controller
         return Redirect("Index");
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Search(string query)
+    {
+        var existQuery = query;
+        var result = await _service.SearchByQuery(existQuery);
+        return View(result);
+    }
+
     public IActionResult Update()
         => View();
 
@@ -44,5 +52,12 @@ public class DoctorsController : Controller
     {
         await _service.RemoveByIdAsync(id);
         return Redirect("Index");
+    }
+
+    public async Task<IActionResult> PlanDoctor(long id)
+    {
+        var plan = await _service.GetPlanAsync(id);
+        var doctor = await _service.RetrieveByIdAsync(id);
+        return View((doctor, plan));
     }
 }
